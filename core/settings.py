@@ -37,7 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'auths',
+
 ]
+
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -123,8 +128,8 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 
-# Absolute filesystem path to the directory that will hold media files
 MEDIA_ROOT = BASE_DIR / 'media'
+# Absolute filesystem path to the directory that will hold media files
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
