@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.core.cache import cache  # Redis or local cache
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login, logout
-from .models import User
+# from .models import User
 import uuid
 
 
@@ -100,7 +100,7 @@ def verify_email(request):
             messages.error(request, "Invalid or expired OTP.")
             return redirect("verify_email")
 
-    return render(request, "auths/verify_email.html")
+    return render(request, "auth/verify_email.html")
 
 
 def login_user(request):
@@ -121,7 +121,7 @@ def login_user(request):
         except User.DoesNotExist:
             messages.error(request, "Invalid email or password.")
 
-    return render(request, "auths/login.html")
+    return render(request, "auth/login.html")
 
 
 def logout_user(request):
