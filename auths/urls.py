@@ -2,8 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.login_view, name='login'),  # Redirect to login by default
-    path('home/', views.home, name='home'),  # Home page after login
-    path('logout/', views.logout_view, name='logout'),
-    path('register/', views.register_view, name='register'),
+    path('register/', views.register_user, name='register'),
+    path('verify-email/', views.verify_email, name='verify_email'),
+    path('login/', views.login_user, name='login'),
+    path('logout/', views.logout_user, name='logout'),
 ]

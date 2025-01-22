@@ -1,54 +1,73 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth.decorators import login_required
+from django.core.cache import cache  # Redis or local cache
+from django.core.mail import send_mail
+from django.contrib.auth import authenticate, login, logout
+from .models import User
+import uuid
 
-# Redirect user to the login page by default
-def login_view(request):
-    if request.user.is_authenticated:  # If user is already logged in
-        return redirect('home')  # Redirect to home page
 
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                auth_login(request, user)
-                messages.success(request, f'Welcome {username}!')
-                return redirect('home')
+def register_user(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+
+        # Basic validation
+        if not email or not username or not password or not confirm_password:
+            messages.error(request, "All fields are required.")
+            return redirect("register")
+
+        # ...existing code...
+def verify_email(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        otp = request.POST.get("otp")
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            messages.error(request, "Invalid email address.")
+            return redirect("verify_email")
+
+        cached_otp = cache.get(f"otp_{user.id}")
+
+        if cached_otp and cached_otp == otp:
+            user.is_active = True
+            user.save()
+            cache.delete(f"otp_{user.id}")
+            messages.success(request, "Email verified successfully! You can now log in.")
+            return redirect("login")
+        else:
+            messages.error(request, "Invalid or expired OTP.")
+            return redirect("verify_email")
+
+    return render(request, "auths/verify_email.html")
+
+
+def login_user(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        try:
+            user = User.objects.get(email=email)
+            user = authenticate(request, username=user.username, password=password)
+
+            if user:
+                login(request, user)
+                messages.success(request, "Login successful!")
+                return redirect("home")
             else:
-                messages.error(request, 'Invalid username or password.')
-        else:
-            messages.error(request, 'Invalid username or password.')
-    else:
-        form = AuthenticationForm()
-    return render(request, 'auth/login.html', {'form': form})
+                messages.error(request, "Invalid email or password.")
+        except User.DoesNotExist:
+            messages.error(request, "Invalid email or password.")
 
-def register_view(request):
-    if request.user.is_authenticated:  # Redirect logged-in users to home
-        return redirect('home')
+    return render(request, "auths/login.html")
 
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            auth_login(request, user)
-            messages.success(request, 'Registration successful.')
-            return redirect('home')
-        else:
-            messages.error(request, 'Unsuccessful registration. Invalid information.')
-    else:
-        form = UserCreationForm()
-    return render(request, 'auth/register.html', {'form': form})
 
-@login_required
-def home(request):
-    return render(request, 'auth/home.html')  # Make sure this template exists
-
-def logout_view(request):
-    auth_logout(request)
-    messages.success(request, 'You have been logged out.')
-    return redirect('login')
+def logout_user(request):
+    logout(request)
+    messages.success(request, "Logged out successfully!")
+    return redirect("login")
