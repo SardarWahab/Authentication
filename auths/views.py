@@ -67,7 +67,7 @@ def register_user(request):
         return redirect("verify_email")
     
     # If not a POST request, render the registration form
-    return render(request, "register.html")
+    return render(request, "auth/register.html")
 
     
 
