@@ -1,8 +1,10 @@
+{% extends "layouts/base.html" %}
 {% block content %}
 
-        <h1>Welcome to the Site!</h1>
-        <p>We are glad to have you here.</p>
-        <p>Click <a href="{{ url_for('login') }}">here</a> to login.</p>
-        <p>Click <a href="{{ url_for('register') }}">here</a> to register.</p>
-        <p>Click <a href="{{ url_for('logout') }}">here</a> to logout.</p>
+    <h1>Welcome to the Site!</h1>
+    <p>We are glad to have you here.</p>
+    <p>Click <a href="{% url 'login' %}">here</a> to login.</p>
+    <p>Click <a href="{% url 'register' %}">here</a> to register.</p>
+    <p>Click <a href="{% url 'logout' %}">here</a> to logout.</p>
+
 {% endblock content %}

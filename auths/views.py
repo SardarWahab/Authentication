@@ -50,7 +50,8 @@ def register_user(request):
         # Generate OTP
         otp = uuid.uuid4().hex[:6].upper()
         cache.set(f"otp_{user.id}", otp, timeout=300)  # Cache OTP for 5 minutes
-
+          # Print the OTP to the terminal (for development purposes only)
+        print(f"Generated OTP for {email}: {otp}")
         # Send OTP to the user
         try:
             send_mail(
