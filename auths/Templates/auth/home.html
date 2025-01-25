@@ -1,10 +1,21 @@
 {% extends "layouts/base.html" %}
+
 {% block content %}
-
-    <h1>Welcome to the Site!</h1>
-    <p>We are glad to have you here.</p>
-    <p>Click <a href="{% url 'login' %}">here</a> to login.</p>
-    <p>Click <a href="{% url 'register' %}">here</a> to register.</p>
-    <p>Click <a href="{% url 'logout' %}">here</a> to logout.</p>
-
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Welcome to Our Blog!</h1>
+    <div class="row">
+        {% for blog in blogs %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <img src="{{ blog.image_url }}" class="card-img-top" alt="{{ blog.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ blog.title }}</h5>
+                    <p class="card-text text-truncate">{{ blog.content|truncatewords:20 }}</p>
+                    <a href="{% url 'blog_detail' blog.id %}" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock content %}
