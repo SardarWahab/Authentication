@@ -7,7 +7,7 @@
     <link 
         href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" 
         rel="stylesheet">
-        <link rel="icon" href="https://www.bing.com/images/search?view=detailV2&ccid=LA0Z%2ffp4&id=4D72FBFB8130676B61A4A9CBB32EBB9654EC847B&thid=OIP.LA0Z_fp4fD20IvmfaS3rvgHaHa&mediaurl=https%3a%2f%2fwww.freeiconspng.com%2fuploads%2fblogger-logo-icon-png-29.png&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.2c0d19fdfa787c3db422f99f692debbe%3frik%3de4TsVJa7LrPLqQ%26pid%3dImgRaw%26r%3d0&exph=900&expw=900&q=Blogs+logo&simid=608022273221725639&FORM=IRPRST&ck=9810324766F2158B7046997B532D24D4&selectedIndex=2&itb=1">
+    <link rel="icon" href="https://www.freeiconspng.com/uploads/blogger-logo-icon-png-29.png">
 </head>
 <body>
     <!-- Navbar -->
@@ -23,12 +23,15 @@
                         <a class="nav-link" href="{% url 'home' %}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="">About</a>
+                        <a class="nav-link" href="#">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="">Contact</a>
+                        <a class="nav-link" href="#">Contact</a>
                     </li>
                     {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'upload_blog' %}">Upload Blog</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                         </li>
@@ -49,16 +52,15 @@
     <div class="container mt-3">
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                     {{ message }}
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span> <!-- Cross button -->
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
             {% endfor %}
         {% endif %}
     </div>
-    
 
     <!-- Main Content -->
     <div class="container mt-4">
@@ -67,12 +69,8 @@
     </div>
 
     <!-- Scripts -->
-     <!-- Scripts -->
-     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
- 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
-
 </html>

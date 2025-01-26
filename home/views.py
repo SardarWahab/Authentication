@@ -1,8 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Blog, Comment
-from .forms import CommentForm
+from .models import Blog, Comment # Assuming a BlogForm exists
 
 def blog_list(request):
     blogs = Blog.objects.all().order_by('-created_at')
@@ -43,3 +42,29 @@ def add_comment(request, blog_id):
             return redirect('blog_detail', blog_id=blog.id)
 
     return HttpResponse("Invalid request")
+
+from django.contrib import messages
+
+@login_required
+def upload_blog(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        image = request.FILES.get('image')
+
+        if title and content:  # Ensure required fields are filled
+            blog = Blog(
+                title=title,
+                content=content,
+                image=image,
+                created_at=now(),  # Automatically set the current timestamp
+            )
+            blog.save()
+            messages.success(request, "Blog uploaded successfully!")
+            return redirect('blog_list')  # Redirect to the blog list page
+        else:
+            messages.error(request, "Title and content are required fields.")
+            return redirect('upload_blog')  # Redirect back to the form for correction
+
+    return render(request, 'upload_blog.html')
+

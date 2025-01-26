@@ -1,0 +1,29 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Upload Blog</h1>
+    
+
+    <!-- Blog Upload Form -->
+    <form method="post" enctype="multipart/form-data" class="border p-4 shadow-sm rounded">
+        {% csrf_token %}
+        <!-- Title Field -->
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" placeholder="Enter blog title" required>
+        </div>
+        <!-- Content Field -->
+        <div class="mb-3">
+            <label for="content" class="form-label">Content</label>
+            <textarea class="form-control" id="content" name="content" rows="5" placeholder="Write your blog content here..." required></textarea>
+        </div>
+        <!-- Image Upload Field -->
+        <div class="mb-3">
+            <label for="image" class="form-label">Upload Image</label>
+            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+        </div>
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-100">Upload Blog</button>
+    </form>
+</div>
+{% endblock content %}
