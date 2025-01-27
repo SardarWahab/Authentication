@@ -5,9 +5,12 @@ from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
 from .models import Blog, Comment # Assuming a BlogForm exists
 
+@login_required
 def blog_list(request):
-    blogs = Blog.objects.all().order_by('-created_at')
-    return render(request, 'auth/home.html', {'blogs': blogs})
+    blogs = Blog.objects.all().order_by('-created_at')  # Fetch blogs ordered by creation date
+    print(blogs)  # Debugging: Check if blogs are being fetched
+    return render(request, 'home.html', {'blogs': blogs})  # Ensure the template name is correct
+
 
 def blog_detail(request, blog_id):
     pass
