@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
+from django.contrib import messages
+from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
 from .models import Blog, Comment # Assuming a BlogForm exists
 
@@ -8,45 +10,30 @@ def blog_list(request):
     return render(request, 'blog_list.html', {'blogs': blogs})
 
 def blog_detail(request, blog_id):
-    blog = get_object_or_404(Blog, id=blog_id)
-    comments = blog.comments.all().order_by('-created_at')
-
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.blog = blog
-            comment.user = request.user
-            comment.save()
-            return redirect('blog_detail', blog_id=blog.id)
-    else:
-        form = CommentForm()
-
-    return render(request, 'blog_detail.html', {
-        'blog': blog,
-        'comments': comments,
-        'form': form
-    })
-
+    pass
 @login_required
 def add_comment(request, blog_id):
-    blog = get_object_or_404(Blog, id=blog_id)
-
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.blog = blog
-            comment.user = request.user
-            comment.save()
-            return redirect('blog_detail', blog_id=blog.id)
-
-    return HttpResponse("Invalid request")
-
-from django.contrib import messages
+   pass
 
 @login_required
 def upload_blog(request):
+    # if request.method == 'POST':
+    #     title = request.POST['title']
+    #     content = request.POST['content']
+    #     image = request.FILES.get('image')  # Get the image file if uploaded
+
+    #     # Create the new blog post
+    #     blog = Blog(
+    #         title=title,
+    #         content=content,
+    #         image=image,
+    #         created_at=now(),  # <-- Use now() to set the current timestamp
+    #     )
+    #     blog.save()
+        
+    #     return redirect('blog_list')  # Redirect to the blog list after successful upload
+    # else:
+    #     return render(request, 'upload_blog.html') 
     if request.method == 'POST':
         title = request.POST.get('title')
         content = request.POST.get('content')
@@ -66,5 +53,5 @@ def upload_blog(request):
             messages.error(request, "Title and content are required fields.")
             return redirect('upload_blog')  # Redirect back to the form for correction
 
-    return render(request, 'upload_blog.html')
+    return render(request, 'auth/upload_blog.html')
 
