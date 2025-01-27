@@ -7,7 +7,7 @@ from .models import Blog, Comment # Assuming a BlogForm exists
 
 def blog_list(request):
     blogs = Blog.objects.all().order_by('-created_at')
-    return render(request, 'blog_list.html', {'blogs': blogs})
+    return render(request, 'auth/home.html', {'blogs': blogs})
 
 def blog_detail(request, blog_id):
     pass
@@ -48,7 +48,7 @@ def upload_blog(request):
             )
             blog.save()
             messages.success(request, "Blog uploaded successfully!")
-            return redirect('blog_list')  # Redirect to the blog list page
+            return redirect('home')  # Redirect to the blog list page
         else:
             messages.error(request, "Title and content are required fields.")
             return redirect('upload_blog')  # Redirect back to the form for correction

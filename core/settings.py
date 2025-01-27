@@ -131,21 +131,17 @@ USE_I18N = True
 USE_TZ = True
 
 
+import os
+
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # Your project-level static files directory
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')   # Directory where static files will be collected
 
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',  
-]
-
+# Media files (Uploaded files)
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')          # Directory where media files will be stored
 
-MEDIA_ROOT = BASE_DIR / 'media'
-# Absolute filesystem path to the directory that will hold media files
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
