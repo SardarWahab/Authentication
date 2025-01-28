@@ -140,7 +140,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')   # Directory where static f
 
 # Media files (Uploaded files)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')          # Directory where media files will be stored
+MEDIA_ROOT = BASE_DIR / 'media' 
+
+       # Directory where media files will be stored
+LOGIN_URL = '/login/'  # Ensure this matches the path in your auths/urls.py
+LOGIN_REDIRECT_URL = '/'  # Redirect after login
+LOGOUT_REDIRECT_URL = '/'  # Redirect after logout
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

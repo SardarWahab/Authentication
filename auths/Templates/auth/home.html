@@ -3,22 +3,16 @@
 {% block content %}
 <div class="container mt-5">
     <h1 class="text-center mb-4">Welcome to Our Blog!</h1>
+    <p>Blogs count: {{ blogs|length }}</p> <!-- Check if blogs are being passed -->
     <div class="row">
         {% for blog in blogs %}
         <div class="col-md-4 mb-4">
             <div class="card shadow-lg border-0 h-100">
-                <!-- Card Image -->
-                <div class="overflow-hidden rounded-top">
-                    <img src="{{ blog.image.url }}" class="card-img-top img-fluid" alt="{{ blog.title }}" style="height: 200px; object-fit: cover; transition: transform 0.3s;">
-                </div>
-
-                <!-- Card Body -->
+                <img src="{{ blog.image.url }}" class="card-img-top img-fluid" alt="{{ blog.title }}" style="height: 200px; object-fit: cover;">
                 <div class="card-body">
                     <h5 class="card-title fw-bold">{{ blog.title }}</h5>
                     <p class="card-text text-muted">{{ blog.content|truncatewords:20 }}</p>
                 </div>
-
-                <!-- Card Footer -->
                 <div class="card-footer bg-white border-0 text-center">
                     <a href="{% url 'blog_detail' blog.id %}" class="btn btn-primary btn-sm w-100 rounded-pill">
                         Read More
@@ -26,7 +20,10 @@
                 </div>
             </div>
         </div>
+        {% empty %}
+        <p>No blogs found.</p>
         {% endfor %}
     </div>
 </div>
+
 {% endblock content %}

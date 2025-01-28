@@ -4,15 +4,6 @@ from django.core.cache import cache  # Redis or local cache
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.auth.decorators import login_required
-
-# from .models import User
-import uuid
-
-
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.core.mail import send_mail
-from django.core.cache import cache
 from django.contrib.auth import get_user_model
 import uuid
 
@@ -131,6 +122,6 @@ def logout_user(request):
     logout(request)
     messages.success(request, "Logged out successfully!")
     return redirect("login")
-@login_required
+
 def home(request):
     return render(request, "auth/home.html")
