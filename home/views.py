@@ -7,14 +7,48 @@ from .models import Blog, Comment # Assuming a BlogForm exists
 
 @login_required
 def blog_list(request):
-    blogs = Blog.objects.all()
-    # .order_by('-created_at')  # Fetch all blogs
+    blogs = Blog.objects.all().order_by('-created_at')  # Fetch all blogs
     print(f"Blogs in blog_list view: {blogs}")    # Debugging output
     return render(request, 'Blogs/home.html', {'blogs': blogs})
-
 @login_required
 def blog_detail(request, blog_id):
-    pass
+    blog = get_object_or_404(Blog, id=blog_id)
+    comments = blog.comments.all().order_by('-created_at')
+
+    if request.method == 'POST':
+        if 'like' in request.POST:
+            if request.user in blog.likes.all():
+                blog.likes.remove(request.user)  # Remove the like if already liked
+                messages.success(request, "You unliked this blog!")
+            else:
+                blog.likes.add(request.user)  # Add a like
+                blog.dislikes.remove(request.user)  # Remove dislike if exists
+                messages.success(request, "You liked this blog!")
+            return redirect('blog_detail', blog_id=blog.id)
+
+        # Handle dislike button
+        elif 'dislike' in request.POST:
+            if request.user in blog.dislikes.all():
+                blog.dislikes.remove(request.user)  # Remove the dislike if already disliked
+                messages.success(request, "You removed your dislike!")
+            else:
+                blog.dislikes.add(request.user)  # Add a dislike
+                blog.likes.remove(request.user)  # Remove like if exists
+                messages.success(request, "You disliked this blog!")
+            return redirect('blog_detail', blog_id=blog.id)
+
+        # Handle comment submission
+        elif 'comment' in request.POST:
+            content = request.POST.get('comment_content')
+            if content:
+                Comment.objects.create(blog=blog, user=request.user, content=content, created_at=now())
+                messages.success(request, "Your comment has been posted!")
+            else:
+                messages.error(request, "Comment content cannot be empty.")
+            return redirect('blog_detail', blog_id=blog.id)
+
+    return render(request, 'Blogs/blog_detail.html', {'blog': blog, 'comments': comments})
+
 @login_required
 def add_comment(request, blog_id):
    pass

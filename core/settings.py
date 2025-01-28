@@ -134,8 +134,11 @@ USE_TZ = True
 import os
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # Your project-level static files directory
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # Ensure this path exists
+]
+
+STATIC_URL = '/static/'  # Your project-level static files directory
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')   # Directory where static files will be collected
 
 # Media files (Uploaded files)

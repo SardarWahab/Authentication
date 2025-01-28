@@ -109,7 +109,7 @@ def login_user(request):
             if user:
                 login(request, user)
                 messages.success(request, "Login successful!")
-                return redirect("home")
+                return redirect("blog_list")
             else:
                 messages.error(request, "Invalid email or password.")
         except User.DoesNotExist:
@@ -124,4 +124,4 @@ def logout_user(request):
     return redirect("login")
 
 def home(request):
-    return render(request, "auth/home.html")
+    return render(request, "Blogs/home.html")

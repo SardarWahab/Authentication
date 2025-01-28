@@ -1,0 +1,82 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <!-- Blog Title -->
+  <h1 class="text-center mb-4">{{ blog.title }}</h1>
+
+  <!-- Blog Image -->
+  {% if blog.image %}
+  <div class="text-center mb-4">
+    <img
+      src="{{ blog.image.url }}"
+      alt="{{ blog.title }}"
+      class="img-fluid rounded shadow-sm"
+      style="max-height: 400px; object-fit: cover"
+    />
+  </div>
+  {% endif %}
+
+  <!-- Blog Content -->
+  <div class="mb-4">
+    <p class="text-muted">
+      <strong>Posted on:</strong> {{ blog.created_at|date:"F d, Y" }}
+    </p>
+    <p>{{ blog.content|linebreaks }}</p>
+  </div>
+
+  <!-- Like/Dislike Buttons -->
+  <!-- Like/Dislike Buttons -->
+<div class="mb-4 text-center">
+    <form method="post" class="d-inline-block">
+      {% csrf_token %}
+      <button type="submit" name="like" class="btn {% if user in blog.likes.all %}btn-success{% else %}btn-outline-success{% endif %} me-2">
+        👍 Like ({{ blog.total_likes }})
+      </button>
+      <button type="submit" name="dislike" class="btn {% if user in blog.dislikes.all %}btn-danger{% else %}btn-outline-danger{% endif %}">
+        👎 Dislike ({{ blog.total_dislikes }})
+      </button>
+    </form>
+  </div>
+  
+
+  <!-- Comments Section -->
+  <div class="mb-4">
+    <h3>Comments ({{ comments|length }})</h3>
+
+    {% if comments %}
+    <ul class="list-group">
+      {% for comment in comments %}
+      <li class="list-group-item">
+        <strong>{{ comment.user.username }}</strong> ({{ comment.created_at|date:"F d, Y H:i" }}):
+        <p>{{ comment.content }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No comments yet. Be the first to comment!</p>
+    {% endif %}
+  </div>
+
+  <!-- Add Comment Form -->
+  <div class="mb-4">
+    <h4>Leave a Comment</h4>
+    <form method="post">
+      {% csrf_token %}
+      <textarea
+        name="comment_content"
+        class="form-control mb-3"
+        rows="3"
+        placeholder="Write your comment here..."
+        required
+      ></textarea>
+      <button type="submit" name="comment" class="btn btn-primary">Post Comment</button>
+    </form>
+  </div>
+
+  <!-- Back Button -->
+  <div class="text-center">
+    <a href="{% url 'blog_list' %}" class="btn btn-secondary">Back to Blogs</a>
+  </div>
+</div>
+{% endblock content %}
