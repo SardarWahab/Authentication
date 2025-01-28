@@ -7,9 +7,10 @@ from .models import Blog, Comment # Assuming a BlogForm exists
 
 @login_required
 def blog_list(request):
-    blogs = Blog.objects.all().order_by('-created_at')  # Fetch all blogs
-    print(f"Blogs: {blogs}")  # Debugging output
-    return render(request, 'home.html', {'blogs': blogs})
+    blogs = Blog.objects.all()
+    # .order_by('-created_at')  # Fetch all blogs
+    print(f"Blogs in blog_list view: {blogs}")    # Debugging output
+    return render(request, 'Blogs/home.html', {'blogs': blogs})
 
 @login_required
 def blog_detail(request, blog_id):
@@ -34,10 +35,10 @@ def upload_blog(request):
             )
             blog.save()
             messages.success(request, "Blog uploaded successfully!")
-            return redirect('home')  # Redirect after successful upload
+            return redirect('blog_list')  # Redirect after successful upload
         else:
             messages.error(request, "Title and content are required fields.")
             return redirect('upload_blog')  # Redirect back to the form if validation fails
 
     # Render the form for GET requests
-    return render(request, 'auth/upload_blog.html')
+    return render(request, 'Blogs/upload_blog.html')
