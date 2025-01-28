@@ -73,10 +73,23 @@
       <button type="submit" name="comment" class="btn btn-primary">Post Comment</button>
     </form>
   </div>
+  <!-- Delete Blog Button (only visible to blog owner) -->
+<!-- Delete Blog Button (only for the author) -->
+{% if blog.author == user %}
+<div class="text-center mt-4">
+    <form method="post" action="{% url 'delete_blog' blog.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete Blog</button>
+    </form>
+</div>
+{% endif %}
+
+
+
 
   <!-- Back Button -->
   <div class="text-center">
-    <a href="{% url 'blog_list' %}" class="btn btn-secondary">Back to Blogs</a>
+    <a href="{% url 'blog_list' %}" class="btn btn-secondary mt-3">Back to Blogs</a>
   </div>
 </div>
 {% endblock content %}

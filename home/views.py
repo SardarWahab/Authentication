@@ -66,6 +66,7 @@ def upload_blog(request):
                 content=content,
                 image=image,
                 created_at=now(),  # Automatically set the current timestamp
+                author=request.user  # Assign the logged-in user as the author
             )
             blog.save()
             messages.success(request, "Blog uploaded successfully!")
@@ -76,3 +77,22 @@ def upload_blog(request):
 
     # Render the form for GET requests
     return render(request, 'Blogs/upload_blog.html')
+
+
+@login_required
+def delete_blog(request, blog_id):
+    blog = get_object_or_404(Blog, id=blog_id)
+
+    # Check if the logged-in user is the author of the blog
+    if blog.author != request.user:
+        messages.error(request, "You are not authorized to delete this blog.")
+        return redirect('blog_detail', blog_id=blog_id)
+
+    if request.method == "POST":
+        blog.delete()
+        messages.success(request, "Blog deleted successfully!")
+        return redirect('blog_list')
+
+    messages.error(request, "Invalid request.")
+    return redirect('blog_detail', blog_id=blog_id)
+  

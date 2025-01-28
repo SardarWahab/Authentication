@@ -5,16 +5,19 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
 
-class Blog(models.Model):
-    title = models.CharField(max_length=200)
-    content = models.TextField()
-    image = models.ImageField(upload_to='blog_images/')
-    likes = models.ManyToManyField(User, related_name='liked_blogs', blank=True)  # Tracks users who liked
-    dislikes = models.ManyToManyField(User, related_name='disliked_blogs', blank=True)  # Tracks users who disliked
-    created_at = models.DateTimeField(default=now)
+from django.db import models
+from django.contrib.auth.models import User
 
-    def __str__(self):
-        return self.title
+class Blog(models.Model):
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    image = models.ImageField(upload_to='blogs/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blogs')
+    
+    # Adding Many-to-Many fields for likes and dislikes
+    likes = models.ManyToManyField(User, related_name='liked_blogs', blank=True)
+    dislikes = models.ManyToManyField(User, related_name='disliked_blogs', blank=True)
 
     def total_likes(self):
         return self.likes.count()
@@ -22,6 +25,8 @@ class Blog(models.Model):
     def total_dislikes(self):
         return self.dislikes.count()
 
+    def __str__(self):
+        return self.title
 
 class Comment(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='comments')

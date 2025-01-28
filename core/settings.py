@@ -146,7 +146,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media' 
 
        # Directory where media files will be stored
-LOGIN_URL = '/login/'  # Ensure this matches the path in your auths/urls.py
+LOGIN_URL = '/auth/login/'  # Ensure this matches the path in your auths/urls.py
 LOGIN_REDIRECT_URL = '/'  # Redirect after login
 LOGOUT_REDIRECT_URL = '/'  # Redirect after logout
 

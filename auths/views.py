@@ -109,13 +109,14 @@ def login_user(request):
             if user:
                 login(request, user)
                 messages.success(request, "Login successful!")
-                return redirect("blog_list")
+                return redirect("blog_list")  # Redirect to blog_list after login
             else:
                 messages.error(request, "Invalid email or password.")
         except User.DoesNotExist:
             messages.error(request, "Invalid email or password.")
 
     return render(request, "auth/login.html")
+
 
 
 def logout_user(request):
