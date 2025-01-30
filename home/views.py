@@ -4,13 +4,17 @@ from django.contrib import messages
 from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
 from .models import Blog, Comment # Assuming a BlogForm exists
+from django.views.decorators.cache import cache_page
 
 @login_required
+@cache_page(60 * 15)  # Cache the page for 15 minutes
 def blog_list(request):
     blogs = Blog.objects.all().order_by('-created_at')  # Fetch all blogs
-    print(f"Blogs in blog_list view: {blogs}")    # Debugging output
+    print(f"Blogs in blog_list view: {blogs}")  # Debugging output
     return render(request, 'Blogs/home.html', {'blogs': blogs})
+
 @login_required
+@cache_page(60 * 15)  # Cache for 15 minutes
 def blog_detail(request, blog_id):
     blog = get_object_or_404(Blog, id=blog_id)
     comments = blog.comments.all().order_by('-created_at')
@@ -47,13 +51,14 @@ def blog_detail(request, blog_id):
                 messages.error(request, "Comment content cannot be empty.")
             return redirect('blog_detail', blog_id=blog.id)
 
-    return render(request, 'Blogs/blog_detail.html', {'blog': blog, 'comments': comments})
+    return render(request, 'Blogs/blog_detail.html', {'blog': blog, 'comments': comments})  
 
 @login_required
 def add_comment(request, blog_id):
    pass
 
 @login_required
+@cache_page(60 * 15)  # Cache for 15 minutes
 def upload_blog(request):
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -80,6 +85,7 @@ def upload_blog(request):
 
 
 @login_required
+@cache_page(60 * 15)  # Cache for 15 minutes
 def delete_blog(request, blog_id):
     blog = get_object_or_404(Blog, id=blog_id)
 
@@ -95,4 +101,3 @@ def delete_blog(request, blog_id):
 
     messages.error(request, "Invalid request.")
     return redirect('blog_detail', blog_id=blog_id)
-  

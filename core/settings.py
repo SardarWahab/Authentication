@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-!#3w9huos340!5=d%ani%60#qzq0o$3#bce(b10!pf*u@m=_^l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -83,10 +83,15 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'your_db_name',
+        'USER': 'your_db_user',
+        'PASSWORD': 'your_db_password',
+        'HOST': 'your_db_host',
+        'PORT': 'your_db_port',
     }
 }
+
 
 
 # Password validation
@@ -132,14 +137,9 @@ USE_TZ = True
 
 
 import os
-
-# Static files (CSS, JavaScript, Images)
-STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Ensure this path exists
-]
-
-STATIC_URL = '/static/'  # Your project-level static files directory
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')   # Directory where static files will be collected
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Media files (Uploaded files)
 MEDIA_URL = '/media/'

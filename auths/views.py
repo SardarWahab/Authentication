@@ -16,39 +16,33 @@ def register_user(request):
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
-        # Check if the password and confirm password match  
         if password != confirm_password:
             messages.error(request, "Passwords do not match.")
             return redirect("register")
 
-        # Check if the email already exists
         if User.objects.filter(email=email).exists():
             messages.error(request, "Email already exists.")
             return redirect("register")
 
-        # Check if the username already exists
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username already exists.")
             return redirect("register")
 
-        # Create a new user
         try:
             user = User.objects.create_user(email=email, username=username, password=password)
         except Exception as e:
             messages.error(request, f"Error creating user: {str(e)}")
             return redirect("register")
 
-        # Generate OTP
         otp = uuid.uuid4().hex[:6].upper()
-        cache.set(f"otp_{user.id}", otp, timeout=300)  # Cache OTP for 5 minutes
-          # Print the OTP to the terminal (for development purposes only)
+        cache.set(f"otp_{user.id}", otp, timeout=300)
         print(f"Generated OTP for {email}: {otp}")
-        # Send OTP to the user
+
         try:
             send_mail(
                 "Email Verification",
                 f"Your OTP is {otp}",
-                "no-reply@example.com",  # Replace with your sender email
+                "no-reply@example.com",
                 [email],
                 fail_silently=False,
             )
@@ -56,21 +50,16 @@ def register_user(request):
             messages.error(request, f"Error sending email: {str(e)}")
             return redirect("register")
 
-        # Success message and redirect
         messages.success(request, "Account created successfully! Please verify your email.")
         return redirect("verify_email")
     
-    # If not a POST request, render the registration form
-    return render(request, "auth/register.html")
+    cached_register_page = cache.get("register_page")
+    if not cached_register_page:
+        cached_register_page = render(request, "auth/register.html").content
+        cache.set("register_page", cached_register_page, timeout=300)
+    return cached_register_page
 
-    
 
-        # Basic validation
-        # if not email or not username or not password or not confirm_password:
-        #     messages.error(request, "All fields are required.")
-        #     return redirect("register")
-
-        # ...existing code...
 def verify_email(request):
     if request.method == "POST":
         email = request.POST.get("email")
@@ -94,7 +83,11 @@ def verify_email(request):
             messages.error(request, "Invalid or expired OTP.")
             return redirect("verify_email")
 
-    return render(request, "auth/verify_email.html")
+    cached_verify_page = cache.get("verify_email_page")
+    if not cached_verify_page:
+        cached_verify_page = render(request, "auth/verify_email.html").content
+        cache.set("verify_email_page", cached_verify_page, timeout=300)
+    return cached_verify_page
 
 
 def login_user(request):
@@ -109,14 +102,17 @@ def login_user(request):
             if user:
                 login(request, user)
                 messages.success(request, "Login successful!")
-                return redirect("blog_list")  # Redirect to blog_list after login
+                return redirect("blog_list")
             else:
                 messages.error(request, "Invalid email or password.")
         except User.DoesNotExist:
             messages.error(request, "Invalid email or password.")
 
-    return render(request, "auth/login.html")
-
+    cached_login_page = cache.get("login_page")
+    if not cached_login_page:
+        cached_login_page = render(request, "auth/login.html").content
+        cache.set("login_page", cached_login_page, timeout=300)
+    return cached_login_page
 
 
 def logout_user(request):
@@ -124,5 +120,10 @@ def logout_user(request):
     messages.success(request, "Logged out successfully!")
     return redirect("login")
 
+
 def home(request):
-    return render(request, "Blogs/home.html")
+    cached_home_page = cache.get("home_page")
+    if not cached_home_page:
+        cached_home_page = render(request, "Blogs/home.html").content
+        cache.set("home_page", cached_home_page, timeout=300)
+    return cached_home_page
