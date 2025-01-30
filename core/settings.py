@@ -29,6 +29,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https') 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -87,7 +89,7 @@ DATABASES = {
         'NAME': os.getenv('DATABASE_NAME', 'railway'),  # Database name, default to 'railway' if not set
         'USER': os.getenv('DATABASE_USER', 'postgres'),  # Database user, default to 'postgres' if not set
         'PASSWORD': os.getenv('DATABASE_PASSWORD', 'XWveAvhuKFsZuxIjlsUUqINYqNyyBuve'),  # Database password, default placeholder
-        'HOST': os.getenv('DATABASE_HOST', 'postgres.railway.internal'),  # Database host, default to 'postgres.railway.internal' if not set
+        'HOST': os.getenv('DATABASE_HOST', 'autorack.proxy.rlwy.net'),  # Database host, default to 'postgres.railway.internal' if not set
         'PORT': os.getenv('DATABASE_PORT', '5432'),  # Database port, default to '5432' if not set
         'OPTIONS': {
             'sslmode': 'require',  # Ensure SSL is used when connecting to Railway (important for production)
