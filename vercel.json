@@ -10,8 +10,8 @@
         }
       },
       {
-        "src": "build.sh",
-        "use": "@vercel/static-build",
+        "src": "staticfiles_build/**/*",
+        "use": "@vercel/static",
         "config": {
           "distDir": "staticfiles_build"
         }
@@ -28,3 +28,4 @@
       }
     ]
   }
+  

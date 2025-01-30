@@ -80,14 +80,18 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+import os
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': 'hrCADTfWmaeeZXykzHCEmDCqdOlozBBv',
-        'HOST': 'postgres.railway.internal',
-        'PORT': '5432',
+        'NAME': os.getenv('DATABASE_NAME', 'railway'),  # Database name, default to 'railway' if not set
+        'USER': os.getenv('DATABASE_USER', 'postgres'),  # Database user, default to 'postgres' if not set
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'XWveAvhuKFsZuxIjlsUUqINYqNyyBuve'),  # Database password, default placeholder
+        'HOST': os.getenv('DATABASE_HOST', 'postgres.railway.internal'),  # Database host, default to 'postgres.railway.internal' if not set
+        'PORT': os.getenv('DATABASE_PORT', '5432'),  # Database port, default to '5432' if not set
+        'OPTIONS': {
+            'sslmode': 'require',  # Ensure SSL is used when connecting to Railway (important for production)
+        },
     }
 }
 
@@ -135,9 +139,9 @@ USE_TZ = True
 
 
 # import os
-# STATIC_URL = '/static/'
-# STATICFILES_DIRS = [BASE_DIR / "static"]
-# STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Media files (Uploaded files)
 MEDIA_URL = '/media/'
